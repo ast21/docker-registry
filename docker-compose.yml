@@ -13,11 +13,16 @@ services:
 
   registry:
     restart: always
-    image: registry:2.7.1
+    image: registry:2
     volumes:
+      - ./auth:/auth
       - ./registry:/var/lib/registry
     networks:
       - backend
+    environment:
+      - REGISTRY_AUTH=${REGISTRY_AUTH}
+      - REGISTRY_AUTH_HTPASSWD_PATH=${REGISTRY_AUTH_HTPASSWD_PATH}
+      - REGISTRY_AUTH_HTPASSWD_REALM=${REGISTRY_AUTH_HTPASSWD_REALM}
 
 networks:
   front:
