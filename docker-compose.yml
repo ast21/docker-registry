@@ -3,26 +3,30 @@ services:
   nginx:
     image: nginx:latest
     volumes:
-      - ./registry.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/templates:/etc/nginx/templates
     networks:
       - front
       - backend
     environment:
       - VIRTUAL_HOST=${VIRTUAL_HOST}
+      - REGISTRY_HOST=${REGISTRY_HOST}
+    depends_on:
+      - registry
     restart: always
 
   registry:
-    restart: always
     image: registry:2
     volumes:
       - ./auth:/auth
       - ./registry:/var/lib/registry
-    networks:
-      - backend
     environment:
       - REGISTRY_AUTH=${REGISTRY_AUTH}
       - REGISTRY_AUTH_HTPASSWD_PATH=${REGISTRY_AUTH_HTPASSWD_PATH}
       - REGISTRY_AUTH_HTPASSWD_REALM=${REGISTRY_AUTH_HTPASSWD_REALM}
+      - REGISTRY_STORAGE_DELETE_ENABLED=true
+    networks:
+      - backend
+    restart: always
 
 networks:
   front:
