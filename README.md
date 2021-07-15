@@ -14,3 +14,10 @@ htpasswd -Bbn testuser testpassword >> auth/htpasswd
 ```bash
 docker login registry.localhost
 ```
+
+### Error docker push command: unknown blob
+
+If after docker push <image> viewing error `unknown blob`, 
+set nginx conf `proxy_set_header X-Forwarded-Proto https`.
+
+https://github.com/distribution/distribution/issues/2225#issuecomment-356882178
