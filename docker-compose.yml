@@ -9,22 +9,35 @@ services:
       - backend
     environment:
       - VIRTUAL_HOST=${VIRTUAL_HOST}
-      - REGISTRY_HOST=${REGISTRY_HOST}
     depends_on:
       - registry
     restart: always
 
   registry:
-    image: registry:2
+    image: registry:2.7
     volumes:
       - ./auth:/auth
       - ./registry:/var/lib/registry
     environment:
+      - REGISTRY_STORAGE_DELETE_ENABLED=true
       - REGISTRY_AUTH=${REGISTRY_AUTH}
       - REGISTRY_AUTH_HTPASSWD_PATH=${REGISTRY_AUTH_HTPASSWD_PATH}
       - REGISTRY_AUTH_HTPASSWD_REALM=${REGISTRY_AUTH_HTPASSWD_REALM}
     networks:
       - backend
+    restart: always
+
+  ui:
+    image: joxit/docker-registry-ui:latest
+    environment:
+      - REGISTRY_TITLE="My Private Docker Registry"
+      - REGISTRY_URL=http://${VIRTUAL_HOST}
+      - DELETE_IMAGES=true
+      - SINGLE_REGISTRY=true
+    networks:
+      - backend
+    depends_on:
+      - registry
     restart: always
 
 networks:
