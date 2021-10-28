@@ -31,7 +31,7 @@ services:
     image: joxit/docker-registry-ui:latest
     environment:
       - REGISTRY_TITLE="My Private Docker Registry"
-      - REGISTRY_URL=http://${VIRTUAL_HOST}
+      - REGISTRY_URL=${REGISTRY_URL}
       - DELETE_IMAGES=true
       - SINGLE_REGISTRY=true
     networks:
